@@ -10,25 +10,25 @@
 #include <TBits.h>
 
 // External include(s):
-#include "../../Common/D3PDVariables/include/JetD3PDObject.h"
-#include "../../Common/D3PDVariables/include/Jet.h"
-#include "../../Common/D3PDVariables/include/EventInfoD3PDObject.h"
-#include "../../Common/D3PDVariables/include/ElectronD3PDObject.h"
-#include "../../Common/D3PDVariables/include/Electron.h"
-#include "../../Common/D3PDVariables/include/MuonD3PDObject.h"
-#include "../../Common/D3PDVariables/include/Muon.h"
-#include "../../Common/D3PDVariables/include/MissingEtD3PDObject.h"
-#include "../../Common/D3PDVariables/include/MissingEt.h"
-#include "../../Common/D3PDVariables/include/GenParticleD3PDObject.h"
-#include "../../Common/D3PDVariables/include/GenParticle.h"
-#include "../../GoodRunsLists/include/TGoodRunsList.h"
-#include "../../Common/PileupReweightingTool/include/PileupReweightingTool.h"
+#include "../NtupleVariables/include/JetNtupleObject.h"
+#include "../NtupleVariables/include/Jet.h"
+#include "../NtupleVariables/include/EventInfoNtupleObject.h"
+#include "../NtupleVariables/include/ElectronNtupleObject.h"
+#include "../NtupleVariables/include/Electron.h"
+#include "../NtupleVariables/include/MuonNtupleObject.h"
+#include "../NtupleVariables/include/Muon.h"
+#include "../NtupleVariables/include/MissingEtNtupleObject.h"
+#include "../NtupleVariables/include/MissingEt.h"
+#include "../NtupleVariables/include/GenParticleNtupleObject.h"
+#include "../NtupleVariables/include/GenParticle.h"
+#include "../GoodRunsLists/include/TGoodRunsList.h"
+#include "../PileupReweightingTool/include/PileupReweightingTool.h"
 
 class TH1D;
 class TH2D;
 class TRandom3;
 class TBits;
-namespace DESY {
+namespace UZH {
   class Jet;
   class Electron;
   class Muon;
@@ -111,7 +111,7 @@ public:
    virtual void bookHistograms( const TString& directory );
    
    /// Function to fill histograms
-   virtual void fillHistograms( const TString& directory, const DESY::Jet& vectorJet, const DESY::Jet& higgsJet, const TLorentzVector& diJet, const double& vJet_tau21, const double& vJet_tau31, const double& vJet_tau32, const int& vJet_nTaggedSubjets, const double& vJet_subjet0_csv, const double& vJet_subjet1_csv, const double& hJet_tau21, const double& hJet_tau31, const double& hJet_tau32, const int& hJet_nTaggedSubjets, const double& hJet_subjet0_csv, const double& hJet_subjet1_csv, const double& deta, const double& dphi, const double& dr );
+   virtual void fillHistograms( const TString& directory, const UZH::Jet& vectorJet, const UZH::Jet& higgsJet, const TLorentzVector& diJet, const double& vJet_tau21, const double& vJet_tau31, const double& vJet_tau32, const int& vJet_nTaggedSubjets, const double& vJet_subjet0_csv, const double& vJet_subjet1_csv, const double& hJet_tau21, const double& hJet_tau31, const double& hJet_tau32, const int& hJet_nTaggedSubjets, const double& hJet_subjet0_csv, const double& hJet_subjet1_csv, const double& deta, const double& dphi, const double& dr );
 
 private:
    //
@@ -121,13 +121,13 @@ private:
   //
   // Input variable objects:
   //
-  D3PD::JetD3PDObject         m_jetAK4;            ///< jet container
-  D3PD::JetD3PDObject         m_jetAK8;            ///< jet container
-  D3PD::EventInfoD3PDObject   m_eventInfo; ///< event info container
-  D3PD::ElectronD3PDObject    m_electron;            ///< electron container
-  D3PD::MuonD3PDObject        m_muon;            ///< muon container
-  D3PD::MissingEtD3PDObject   m_missingEt;            ///< missing E_T container
-  D3PD::GenParticleD3PDObject m_genParticle;            ///< gen particle container
+  Ntuple::JetNtupleObject         m_jetAK4;            ///< jet container
+  Ntuple::JetNtupleObject         m_jetAK8;            ///< jet container
+  Ntuple::EventInfoNtupleObject   m_eventInfo; ///< event info container
+  Ntuple::ElectronNtupleObject    m_electron;            ///< electron container
+  Ntuple::MuonNtupleObject        m_muon;            ///< muon container
+  Ntuple::MissingEtNtupleObject   m_missingEt;            ///< missing E_T container
+  Ntuple::GenParticleNtupleObject m_genParticle;            ///< gen particle container
   
   
   //

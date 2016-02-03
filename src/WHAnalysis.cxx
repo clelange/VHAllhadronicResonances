@@ -4,7 +4,7 @@
 #include "../include/WHAnalysis.h"
 
 // External include(s):
-#include "../../GoodRunsLists/include/TGoodRunsListReader.h"
+#include "../GoodRunsLists/include/TGoodRunsListReader.h"
 
 #include <TMath.h>
 
@@ -374,19 +374,19 @@ void WHAnalysis::BeginInputFile( const SInputData& ) throw( SError ) {
 
   m_logger << INFO << "Connecting input variables" << SLogger::endmsg;
   if (m_isData) {
-    // m_jetAK4.ConnectVariables(       m_recoTreeName.c_str(), D3PD::JetBasic|D3PD::JetAnalysis, (m_jetAK4Name + "_").c_str() );
-    m_jetAK8.ConnectVariables(       m_recoTreeName.c_str(), D3PD::JetBasic|D3PD::JetAnalysis|D3PD::JetSubstructure|D3PD::JetPrunedSubjets, (m_jetAK8Name + "_").c_str() );
-    m_eventInfo.ConnectVariables(    m_recoTreeName.c_str(), D3PD::EventInfoBasic|D3PD::EventInfoTrigger|D3PD::EventInfoMETFilters, "" );
+    // m_jetAK4.ConnectVariables(       m_recoTreeName.c_str(), Ntuple::JetBasic|Ntuple::JetAnalysis, (m_jetAK4Name + "_").c_str() );
+    m_jetAK8.ConnectVariables(       m_recoTreeName.c_str(), Ntuple::JetBasic|Ntuple::JetAnalysis|Ntuple::JetSubstructure|Ntuple::JetPrunedSubjets, (m_jetAK8Name + "_").c_str() );
+    m_eventInfo.ConnectVariables(    m_recoTreeName.c_str(), Ntuple::EventInfoBasic|Ntuple::EventInfoTrigger|Ntuple::EventInfoMETFilters, "" );
   }
   else {
-    // m_jetAK4.ConnectVariables(       m_recoTreeName.c_str(), D3PD::JetBasic|D3PD::JetAnalysis|D3PD::JetTruth, (m_jetAK4Name + "_").c_str() );
-    m_jetAK8.ConnectVariables(       m_recoTreeName.c_str(), D3PD::JetBasic|D3PD::JetAnalysis|D3PD::JetSubstructure|D3PD::JetTruth|D3PD::JetPrunedSubjets|D3PD::JetPrunedSubjetsTruth, (m_jetAK8Name + "_").c_str() );
-    m_eventInfo.ConnectVariables(    m_recoTreeName.c_str(), D3PD::EventInfoBasic|D3PD::EventInfoTrigger|D3PD::EventInfoMETFilters|D3PD::EventInfoTruth, "" );
-    m_genParticle.ConnectVariables(  m_recoTreeName.c_str(), D3PD::GenParticleBasic, (m_genParticleName + "_").c_str() );
+    // m_jetAK4.ConnectVariables(       m_recoTreeName.c_str(), Ntuple::JetBasic|Ntuple::JetAnalysis|Ntuple::JetTruth, (m_jetAK4Name + "_").c_str() );
+    m_jetAK8.ConnectVariables(       m_recoTreeName.c_str(), Ntuple::JetBasic|Ntuple::JetAnalysis|Ntuple::JetSubstructure|Ntuple::JetTruth|Ntuple::JetPrunedSubjets|Ntuple::JetPrunedSubjetsTruth, (m_jetAK8Name + "_").c_str() );
+    m_eventInfo.ConnectVariables(    m_recoTreeName.c_str(), Ntuple::EventInfoBasic|Ntuple::EventInfoTrigger|Ntuple::EventInfoMETFilters|Ntuple::EventInfoTruth, "" );
+    m_genParticle.ConnectVariables(  m_recoTreeName.c_str(), Ntuple::GenParticleBasic, (m_genParticleName + "_").c_str() );
   }
-  // m_electron.ConnectVariables(     m_recoTreeName.c_str(), D3PD::ElectronBasic|D3PD::ElectronID, (m_electronName + "_").c_str() );
-  // m_muon.ConnectVariables(         m_recoTreeName.c_str(), D3PD::MuonBasic|D3PD::MuonID|D3PD::MuonIsolation, (m_muonName + "_").c_str() );
-  // m_missingEt.ConnectVariables(    m_recoTreeName.c_str(), D3PD::MissingEtBasic, (m_missingEtName + "_").c_str() );
+  // m_electron.ConnectVariables(     m_recoTreeName.c_str(), Ntuple::ElectronBasic|Ntuple::ElectronID, (m_electronName + "_").c_str() );
+  // m_muon.ConnectVariables(         m_recoTreeName.c_str(), Ntuple::MuonBasic|Ntuple::MuonID|Ntuple::MuonIsolation, (m_muonName + "_").c_str() );
+  // m_missingEt.ConnectVariables(    m_recoTreeName.c_str(), Ntuple::MissingEtBasic, (m_missingEtName + "_").c_str() );
   
   m_logger << INFO << "Connecting input variables completed" << SLogger::endmsg;
 
@@ -448,9 +448,9 @@ void WHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
   }
   
   // Cut 4: select two fat jets
-  std::vector<DESY::Jet> goodFatJets;
+  std::vector<UZH::Jet> goodFatJets;
   for ( int i = 0; i < (m_jetAK8.N); ++i ) {
-    DESY::Jet myjet( &m_jetAK8, i );
+    UZH::Jet myjet( &m_jetAK8, i );
     if (myjet.pt() > m_jetPtCut) {
       if (fabs(myjet.eta()) < m_jetEtaCut) {
         if (myjet.IDTight()) {
@@ -550,8 +550,8 @@ void WHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
     }
   }
   
-  DESY::Jet vectorJet;
-  DESY::Jet higgsJet;
+  UZH::Jet vectorJet;
+  UZH::Jet higgsJet;
   
   m_logger << VERBOSE << "kFatJetsDeltaEta" << SLogger::endmsg;
   
@@ -718,9 +718,9 @@ void WHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
       b_weight = getEventWeight();
     }
   
-    // std::vector<DESY::Jet> goodJetsAK4;
+    // std::vector<UZH::Jet> goodJetsAK4;
     // for ( int i = 0; i < (m_jetAK4.N); ++i ) {
-    //   DESY::Jet myjet( &m_jetAK4, i );
+    //   UZH::Jet myjet( &m_jetAK4, i );
     //   if (fabs(myjet.eta()) < m_jetEtaCut) {
     //     if (myjet.pt() > m_jetPtCut) {
     //       goodJetsAK4.push_back(myjet);
@@ -747,9 +747,9 @@ void WHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
     // double mW_min = 60;
     // double mW_max = 100;
     //
-    // std::vector<DESY::Jet> goodJetsAK8;
+    // std::vector<UZH::Jet> goodJetsAK8;
     // for ( int i = 0; i < (m_jetAK8.N); ++i ) {
-    //   DESY::Jet myjet( &m_jetAK8, i );
+    //   UZH::Jet myjet( &m_jetAK8, i );
     //   if (fabs(myjet.eta()) < m_jetEtaCut) {
     //     if (myjet.pt() > m_jetPtCut) {
     //       goodJetsAK8.push_back(myjet);
@@ -1123,7 +1123,7 @@ void WHAnalysis::bookHistograms( const TString& directory ) {
 
 
 
-void WHAnalysis::fillHistograms( const TString& directory, const DESY::Jet& vectorJet, const DESY::Jet& higgsJet, const TLorentzVector& diJet, const double& vJet_tau21, const double& vJet_tau31, const double& vJet_tau32, const int& vJet_nTaggedSubjets, const double& vJet_subjet0_csv, const double& vJet_subjet1_csv, const double& hJet_tau21, const double& hJet_tau31, const double& hJet_tau32, const int& hJet_nTaggedSubjets, const double& hJet_subjet0_csv, const double& hJet_subjet1_csv, const double& deta, const double& dphi, const double& dr ) {
+void WHAnalysis::fillHistograms( const TString& directory, const UZH::Jet& vectorJet, const UZH::Jet& higgsJet, const TLorentzVector& diJet, const double& vJet_tau21, const double& vJet_tau31, const double& vJet_tau32, const int& vJet_nTaggedSubjets, const double& vJet_subjet0_csv, const double& vJet_subjet1_csv, const double& hJet_tau21, const double& hJet_tau31, const double& hJet_tau32, const int& hJet_nTaggedSubjets, const double& hJet_subjet0_csv, const double& hJet_subjet1_csv, const double& deta, const double& dphi, const double& dr ) {
   
   // fill all histograms
   Hist( "vjet_pt", directory )->Fill( vectorJet.pt() , b_weight);
