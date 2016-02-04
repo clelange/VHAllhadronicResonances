@@ -1,18 +1,18 @@
 // $Id: CycleCreators.py 344 2012-12-13 13:10:53Z krasznaa $
 
 // Local include(s):
-#include "../include/WHAnalysis.h"
+#include "../include/VHAnalysis.h"
 
 // External include(s):
 #include "../GoodRunsLists/include/TGoodRunsListReader.h"
 
 #include <TMath.h>
 
-ClassImp( WHAnalysis );
+ClassImp( VHAnalysis );
 
 // define cut names
 
-const std::string WHAnalysis::kCutName[ WHAnalysis::kNumCuts ] = {
+const std::string VHAnalysis::kCutName[ VHAnalysis::kNumCuts ] = {
   "BeforeCuts",            // C0
   "JSON",                  // C1
   "Trigger",               // C2
@@ -27,7 +27,7 @@ const std::string WHAnalysis::kCutName[ WHAnalysis::kNumCuts ] = {
   "SubjetDoubleTag"        // C11
 };
 
-WHAnalysis::WHAnalysis()
+VHAnalysis::VHAnalysis()
    : SCycleBase()
    , m_jetAK4( this )
    , m_jetAK8( this )
@@ -88,13 +88,13 @@ WHAnalysis::WHAnalysis()
    
 }
 
-WHAnalysis::~WHAnalysis() {
+VHAnalysis::~VHAnalysis() {
 
   m_logger << INFO << "Tschoe!" << SLogger::endmsg;
 
 }
 
-void WHAnalysis::BeginCycle() throw( SError ) {
+void VHAnalysis::BeginCycle() throw( SError ) {
 
   m_logger << INFO << "Hello to you!" << SLogger::endmsg;
   
@@ -218,13 +218,13 @@ void WHAnalysis::BeginCycle() throw( SError ) {
 
 }
 
-void WHAnalysis::EndCycle() throw( SError ) {
+void VHAnalysis::EndCycle() throw( SError ) {
 
    return;
 
 }
 
-void WHAnalysis::BeginInputData( const SInputData& id ) throw( SError ) {
+void VHAnalysis::BeginInputData( const SInputData& id ) throw( SError ) {
 
   m_logger << INFO << "RecoTreeName:         " <<             m_recoTreeName << SLogger::endmsg;
   m_logger << INFO << "OutputTreeName:       " <<             m_outputTreeName << SLogger::endmsg;
@@ -346,7 +346,7 @@ void WHAnalysis::BeginInputData( const SInputData& id ) throw( SError ) {
 
 }
 
-void WHAnalysis::EndInputData( const SInputData& ) throw( SError ) {
+void VHAnalysis::EndInputData( const SInputData& ) throw( SError ) {
 
   //
   // Final analysis of cut flow
@@ -370,7 +370,7 @@ void WHAnalysis::EndInputData( const SInputData& ) throw( SError ) {
 
 }
 
-void WHAnalysis::BeginInputFile( const SInputData& ) throw( SError ) {
+void VHAnalysis::BeginInputFile( const SInputData& ) throw( SError ) {
 
   m_logger << INFO << "Connecting input variables" << SLogger::endmsg;
   if (m_isData) {
@@ -394,7 +394,7 @@ void WHAnalysis::BeginInputFile( const SInputData& ) throw( SError ) {
 
 }
 
-void WHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
+void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
 
   m_logger << VERBOSE << "ExecuteEvent" << SLogger::endmsg;
   
@@ -616,6 +616,10 @@ void WHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
   } // moveOn after having selected two candidate jets
   
   if (moveOn) { // move on only if V- and H-jets identified
+    
+    if (m_isSignal) {
+      // fillBTaggingEfficiencies();
+    }
     
     m_logger << VERBOSE << "kVWindow" << SLogger::endmsg;
     
@@ -914,7 +918,7 @@ void WHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
 
 }
 
-bool WHAnalysis::isGoodEvent(int runNumber, int lumiSection) {
+bool VHAnalysis::isGoodEvent(int runNumber, int lumiSection) {
   
   bool isGood = true;
   if (m_isData) {
@@ -930,7 +934,7 @@ bool WHAnalysis::isGoodEvent(int runNumber, int lumiSection) {
 }
 
 
-bool WHAnalysis::passTrigger() {
+bool VHAnalysis::passTrigger() {
   
   bool passTrigger = false;
   
@@ -951,7 +955,7 @@ bool WHAnalysis::passTrigger() {
 }
 
 
-bool WHAnalysis::passMETFilters() {
+bool VHAnalysis::passMETFilters() {
   
   bool passMetFilters = true;
   
@@ -988,7 +992,7 @@ bool WHAnalysis::passMETFilters() {
 }
 
 
-double WHAnalysis::getEventWeight() {
+double VHAnalysis::getEventWeight() {
   
   double weight = 1.;
   for( unsigned int v = 0; v < (m_eventInfo.actualIntPerXing)->size(); ++v ){
@@ -1005,7 +1009,7 @@ double WHAnalysis::getEventWeight() {
   
 }
 
-void WHAnalysis::clearBranches() {
+void VHAnalysis::clearBranches() {
   
   b_weight = 1.;
   b_weightGen = 1.;
@@ -1052,7 +1056,7 @@ void WHAnalysis::clearBranches() {
   
 }
 
-void WHAnalysis::fillCutflow( const std::string histName, const std::string dirName, const TBits& cutmap, const Double_t weight ) {
+void VHAnalysis::fillCutflow( const std::string histName, const std::string dirName, const TBits& cutmap, const Double_t weight ) {
 
   // bool writeNtuple = false;
   // sequential cut flow -> stop at first failed cut
@@ -1074,7 +1078,7 @@ void WHAnalysis::fillCutflow( const std::string histName, const std::string dirN
   // }
 }
 
-void WHAnalysis::bookHistograms( const TString& directory ) {
+void VHAnalysis::bookHistograms( const TString& directory ) {
   
   // kinematics histograms
   Book( TH1F( "vjet_pt", "Vjet p_{T};Vjet p_{T} [GeV]", 200, 0, 2000 ), directory ); 
@@ -1123,7 +1127,7 @@ void WHAnalysis::bookHistograms( const TString& directory ) {
 
 
 
-void WHAnalysis::fillHistograms( const TString& directory, const UZH::Jet& vectorJet, const UZH::Jet& higgsJet, const TLorentzVector& diJet, const double& vJet_tau21, const double& vJet_tau31, const double& vJet_tau32, const int& vJet_nTaggedSubjets, const double& vJet_subjet0_csv, const double& vJet_subjet1_csv, const double& hJet_tau21, const double& hJet_tau31, const double& hJet_tau32, const int& hJet_nTaggedSubjets, const double& hJet_subjet0_csv, const double& hJet_subjet1_csv, const double& deta, const double& dphi, const double& dr ) {
+void VHAnalysis::fillHistograms( const TString& directory, const UZH::Jet& vectorJet, const UZH::Jet& higgsJet, const TLorentzVector& diJet, const double& vJet_tau21, const double& vJet_tau31, const double& vJet_tau32, const int& vJet_nTaggedSubjets, const double& vJet_subjet0_csv, const double& vJet_subjet1_csv, const double& hJet_tau21, const double& hJet_tau31, const double& hJet_tau32, const int& hJet_nTaggedSubjets, const double& hJet_subjet0_csv, const double& hJet_subjet1_csv, const double& deta, const double& dphi, const double& dr ) {
   
   // fill all histograms
   Hist( "vjet_pt", directory )->Fill( vectorJet.pt() , b_weight);

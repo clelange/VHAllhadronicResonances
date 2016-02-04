@@ -1,7 +1,7 @@
 // Dear emacs, this is -*- c++ -*-
 // $Id: CycleCreators.py 344 2012-12-13 13:10:53Z krasznaa $
-#ifndef WHAnalysis_H
-#define WHAnalysis_H
+#ifndef VHAnalysis_H
+#define VHAnalysis_H
 
 // SFrame include(s):
 #include "core/include/SCycleBase.h"
@@ -44,7 +44,7 @@ namespace UZH {
  *  @author Put your name here
  * @version $Revision: 344 $
  */
-class WHAnalysis : public SCycleBase {
+class VHAnalysis : public SCycleBase {
 
 public:
   
@@ -69,9 +69,9 @@ public:
   static const std::string kCutName[ kNumCuts ];
   
    /// Default constructor
-   WHAnalysis();
+   VHAnalysis();
    /// Default destructor
-   ~WHAnalysis();
+   ~VHAnalysis();
 
    /// Function called at the beginning of the cycle
    virtual void BeginCycle() throw( SError );
@@ -137,7 +137,7 @@ private:
   PileupReweightingTool m_pileupReweightingTool;
   
   //
-  // XML settings for WHAnalysis
+  // XML settings for VHAnalysis
   //
   // naming
   std::string m_recoTreeName;       ///< name of tree with reconstructed objects in ntuple
@@ -242,9 +242,9 @@ private:
   std::vector<Int_t>      b_selection_lastcut;
 
    // Macro adding the functions for dictionary generation
-   ClassDef( WHAnalysis, 0 );
+   ClassDef( VHAnalysis, 0 );
 
-}; // class WHAnalysis
+}; // class VHAnalysis
 
-#endif // WHAnalysis_H
+#endif // VHAnalysis_H
 

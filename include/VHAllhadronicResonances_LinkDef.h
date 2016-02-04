@@ -13,6 +13,6 @@
 //
 // #pragma link C++ class MySuperClass+;
 
-#pragma link C++ class WHAnalysis+;
+#pragma link C++ class VHAnalysis+;
 
 #endif // __CINT__

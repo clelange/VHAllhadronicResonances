@@ -1,5 +1,5 @@
 # Package information
-LIBRARY = WHAllhadronicResonances
+LIBRARY = VHAllhadronicResonances
 OBJDIR  = obj
 DEPDIR  = $(OBJDIR)/dep
 SRCDIR  = src
