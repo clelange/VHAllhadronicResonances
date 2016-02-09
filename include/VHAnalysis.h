@@ -23,6 +23,7 @@
 #include "../NtupleVariables/include/GenParticle.h"
 #include "../GoodRunsLists/include/TGoodRunsList.h"
 #include "../PileupReweightingTool/include/PileupReweightingTool.h"
+#include "../BTaggingTools/include/BTaggingScaleTool.h"
 
 class TH1D;
 class TH2D;
@@ -135,6 +136,7 @@ private:
   //
   Root::TGoodRunsList m_grl;
   PileupReweightingTool m_pileupReweightingTool;
+  BTaggingScaleTool m_bTaggingScaleTool;
   
   //
   // XML settings for VHAnalysis

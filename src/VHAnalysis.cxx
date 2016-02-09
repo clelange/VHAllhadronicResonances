@@ -37,6 +37,7 @@ VHAnalysis::VHAnalysis()
    , m_missingEt( this )
    , m_genParticle( this )
    , m_pileupReweightingTool( this )
+   , m_bTaggingScaleTool( this )
 {
 
    m_logger << INFO << "Hello!" << SLogger::endmsg;
@@ -342,6 +343,13 @@ void VHAnalysis::BeginInputData( const SInputData& id ) throw( SError ) {
     bookHistograms(directory);
   }
   
+  // b-tagging tool initialisation
+  m_bTaggingScaleTool.BeginInputData( id );
+  if (m_isSignal) {
+    // b-tagging efficiencies
+    m_bTaggingScaleTool.bookHistograms();
+  }
+  
    return;
 
 }
@@ -618,7 +626,11 @@ void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
   if (moveOn) { // move on only if V- and H-jets identified
     
     if (m_isSignal) {
-      // fillBTaggingEfficiencies();
+      std::vector<UZH::Jet> selectedJets;
+      selectedJets.push_back(vectorJet);
+      selectedJets.push_back(higgsJet);
+      m_bTaggingScaleTool.fillEfficiencies(selectedJets);
+      m_bTaggingScaleTool.fillPrunedSubjetEfficiencies(selectedJets);
     }
     
     m_logger << VERBOSE << "kVWindow" << SLogger::endmsg;
@@ -679,7 +691,7 @@ void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
     // count number of b-tagged subjets
     int nTaggedSubjets = 0;
     for (int i = 0; i < higgsJet.subjet_pruned_N(); ++i) {
-      if (higgsJet.subjet_pruned_csv()[i] > m_csvMin) {
+      if (m_bTaggingScaleTool.isTagged(higgsJet.subjet_pruned_csv()[i])) {
         ++nTaggedSubjets;
       }
     }
@@ -720,6 +732,13 @@ void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
     m_logger << VERBOSE << "selection done" << SLogger::endmsg;
     if (!m_isData) {
       b_weight = getEventWeight();
+      std::vector<UZH::Jet> selectedJets;
+      selectedJets.push_back(vectorJet);
+      selectedJets.push_back(higgsJet);
+      // b_weightBtag = m_bTaggingScaleTool.getScaleFactor(selectedJets); // event b-tag SF weight
+      b_weightBtag = m_bTaggingScaleTool.getPrunedSubjetScaleFactor(selectedJets); // event b-tag SF weight
+      
+      b_weight *= b_weightBtag;
     }
   
     // std::vector<UZH::Jet> goodJetsAK4;
@@ -799,16 +818,16 @@ void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
   Hist( "Events" )->Fill( 0., b_weightGen        ); // event with MC weight
   Hist( "Events" )->Fill( 1,  b_weight           ); // event total weight
   Hist( "Events" )->Fill( 2,  b_weightPU         ); // event pileup weight
+  Hist( "Events" )->Fill( 3,  b_weightBtag ); // event b-tag SF weight
   // Hist( "Events" )->Fill( 3,  b_weight_elScale   ); // event electron SF weight
   // Hist( "Events" )->Fill( 4,  b_weight_muScale   ); // event muon SF weight
-  // Hist( "Events" )->Fill( 5,  b_weight_btagScale ); // event b-tag SF weight
   Hist( "Events" )->Fill( 9,  1                  ); // event without MC weight
   Hist( "SumEvents" )->Fill( 0., fabs(b_weightGen)       ); // event with MC weight
   Hist( "SumEvents" )->Fill( 1,  fabs(b_weight)          ); // event total weight
   Hist( "SumEvents" )->Fill( 2,  fabs(b_weightPU)       ); // event pileup weight
+  Hist( "SumEvents" )->Fill( 3,  fabs(b_weightBtag)); // event b-tag SF weight
   // Hist( "SumEvents" )->Fill( 3,  fabs(b_weight_elScale)  ); // event electron SF weight
   // Hist( "SumEvents" )->Fill( 4,  fabs(b_weight_muScale)  ); // event muon SF weight
-  // Hist( "SumEvents" )->Fill( 5,  fabs(b_weight_btagScale)); // event b-tag SF weight
   // Hist( "SumEvents" )->Fill( 6,  fabs(b_weight_jvfScale));  // event JVF SF weight
   Hist( "SumEvents" )->Fill( 9,  1                       ); // event without MC weight
   
@@ -866,7 +885,7 @@ void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
           vJet_subjet1_csv = vectorJet.subjet_pruned_csv()[i];
           break;
       }
-      if (vectorJet.subjet_pruned_csv()[i] > m_csvMin) {
+      if ((m_bTaggingScaleTool.isTagged(vectorJet.subjet_pruned_csv()[i]))) {
         ++vJet_nTaggedSubjets;
       }
     }
@@ -893,7 +912,7 @@ void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
           hJet_subjet1_csv = higgsJet.subjet_pruned_csv()[i];
           break;
       }
-      if (higgsJet.subjet_pruned_csv()[i] > m_csvMin) {
+      if ((m_bTaggingScaleTool.isTagged(higgsJet.subjet_pruned_csv()[i]))) {
         ++hJet_nTaggedSubjets;
       }
     }
