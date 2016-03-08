@@ -463,60 +463,6 @@ void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
       if (fabs(myjet.eta()) < m_jetEtaCut) {
         if (myjet.IDTight()) {
           goodFatJets.push_back(myjet);
-          
-          // fill output variables
-          if (goodFatJets.size() == 1) {
-            b_ak8jet0_pt = myjet.pt();
-            b_ak8jet0_phi = myjet.phi();
-            b_ak8jet0_eta = myjet.eta();
-            b_ak8jet0_e = myjet.e();
-            double tau21 = -1;
-            if (myjet.tau1() != 0) {
-              tau21 = myjet.tau2() / myjet.tau1();
-            }
-            b_ak8jet0_tau21 = tau21;
-            b_ak8jet0_m = myjet.m();
-            b_ak8jet0_mpruned = myjet.pruned_massCorr();
-            b_ak8jet0_csv = myjet.csv();
-            if (myjet.subjet_pruned_N() >= 2) {
-              double deta = fabs(myjet.subjet_pruned_eta()[0] - myjet.subjet_pruned_eta()[1]);
-              double dphi = fabs(myjet.subjet_pruned_phi()[0] - myjet.subjet_pruned_phi()[1]);
-              double dr = sqrt(deta*deta + dphi*dphi);
-              b_ak8jet0_subjet01_dr = dr;
-              b_ak8jet0_subjet01_deta = deta;
-              b_ak8jet0_subjet01_dphi = dphi;
-              b_ak8jet0_subjet0_pt = myjet.subjet_pruned_pt()[0];
-              b_ak8jet0_subjet1_pt = myjet.subjet_pruned_pt()[1];
-              b_ak8jet0_subjet0_csv = myjet.subjet_pruned_csv()[0];
-              b_ak8jet0_subjet1_csv = myjet.subjet_pruned_csv()[1];
-            }
-          }
-          else if (goodFatJets.size() == 2) {
-            b_ak8jet1_pt = myjet.pt();
-            b_ak8jet1_phi = myjet.phi();
-            b_ak8jet1_eta = myjet.eta();
-            b_ak8jet1_e = myjet.e();
-            double tau21 = -1;
-            if (myjet.tau1() != 0) {
-              tau21 = myjet.tau2() / myjet.tau1();
-            }
-            b_ak8jet1_tau21 = tau21;
-            b_ak8jet1_m = myjet.m();
-            b_ak8jet1_mpruned = myjet.pruned_massCorr();
-            b_ak8jet1_csv = myjet.csv();
-            if (myjet.subjet_pruned_N() >= 2) {
-              double deta = fabs(myjet.subjet_pruned_eta()[0] - myjet.subjet_pruned_eta()[1]);
-              double dphi = fabs(myjet.subjet_pruned_phi()[0] - myjet.subjet_pruned_phi()[1]);
-              double dr = sqrt(deta*deta + dphi*dphi);
-              b_ak8jet1_subjet01_dr = dr;
-              b_ak8jet1_subjet01_deta = deta;
-              b_ak8jet1_subjet01_dphi = dphi;
-              b_ak8jet1_subjet0_pt = myjet.subjet_pruned_pt()[0];
-              b_ak8jet1_subjet1_pt = myjet.subjet_pruned_pt()[1];
-              b_ak8jet1_subjet0_csv = myjet.subjet_pruned_csv()[0];
-              b_ak8jet1_subjet1_csv = myjet.subjet_pruned_csv()[1];
-            }
-          }
         }
       }
     }
@@ -566,6 +512,56 @@ void VHAnalysis::ExecuteEvent( const SInputData&, Double_t ) throw( SError ) {
   if (moveOn) { // need to have selected the two candidate jets
     
     moveOn = false;
+    
+    // fill output variables
+    b_ak8jet0_pt = goodFatJets[goodFatJet1Index].pt();
+    b_ak8jet0_phi = goodFatJets[goodFatJet1Index].phi();
+    b_ak8jet0_eta = goodFatJets[goodFatJet1Index].eta();
+    b_ak8jet0_e = goodFatJets[goodFatJet1Index].e();
+    double tau21 = -1;
+    if (goodFatJets[goodFatJet1Index].tau1() != 0) {
+      tau21 = goodFatJets[goodFatJet1Index].tau2() / goodFatJets[goodFatJet1Index].tau1();
+    }
+    b_ak8jet0_tau21 = tau21;
+    b_ak8jet0_m = goodFatJets[goodFatJet1Index].m();
+    b_ak8jet0_mpruned = goodFatJets[goodFatJet1Index].pruned_massCorr();
+    b_ak8jet0_csv = goodFatJets[goodFatJet1Index].csv();
+    if (goodFatJets[goodFatJet1Index].subjet_pruned_N() >= 2) {
+      double deta = fabs(goodFatJets[goodFatJet1Index].subjet_pruned_eta()[0] - goodFatJets[goodFatJet1Index].subjet_pruned_eta()[1]);
+      double dphi = fabs(goodFatJets[goodFatJet1Index].subjet_pruned_phi()[0] - goodFatJets[goodFatJet1Index].subjet_pruned_phi()[1]);
+      double dr = sqrt(deta*deta + dphi*dphi);
+      b_ak8jet0_subjet01_dr = dr;
+      b_ak8jet0_subjet01_deta = deta;
+      b_ak8jet0_subjet01_dphi = dphi;
+      b_ak8jet0_subjet0_pt = goodFatJets[goodFatJet1Index].subjet_pruned_pt()[0];
+      b_ak8jet0_subjet1_pt = goodFatJets[goodFatJet1Index].subjet_pruned_pt()[1];
+      b_ak8jet0_subjet0_csv = goodFatJets[goodFatJet1Index].subjet_pruned_csv()[0];
+      b_ak8jet0_subjet1_csv = goodFatJets[goodFatJet1Index].subjet_pruned_csv()[1];
+    }
+    b_ak8jet1_pt = goodFatJets[goodFatJet2Index].pt();
+    b_ak8jet1_phi = goodFatJets[goodFatJet2Index].phi();
+    b_ak8jet1_eta = goodFatJets[goodFatJet2Index].eta();
+    b_ak8jet1_e = goodFatJets[goodFatJet2Index].e();
+    tau21 = -1;
+    if (goodFatJets[goodFatJet2Index].tau1() != 0) {
+      tau21 = goodFatJets[goodFatJet2Index].tau2() / goodFatJets[goodFatJet2Index].tau1();
+    }
+    b_ak8jet1_tau21 = tau21;
+    b_ak8jet1_m = goodFatJets[goodFatJet2Index].m();
+    b_ak8jet1_mpruned = goodFatJets[goodFatJet2Index].pruned_massCorr();
+    b_ak8jet1_csv = goodFatJets[goodFatJet2Index].csv();
+    if (goodFatJets[goodFatJet2Index].subjet_pruned_N() >= 2) {
+      double deta = fabs(goodFatJets[goodFatJet2Index].subjet_pruned_eta()[0] - goodFatJets[goodFatJet2Index].subjet_pruned_eta()[1]);
+      double dphi = fabs(goodFatJets[goodFatJet2Index].subjet_pruned_phi()[0] - goodFatJets[goodFatJet2Index].subjet_pruned_phi()[1]);
+      double dr = sqrt(deta*deta + dphi*dphi);
+      b_ak8jet1_subjet01_dr = dr;
+      b_ak8jet1_subjet01_deta = deta;
+      b_ak8jet1_subjet01_dphi = dphi;
+      b_ak8jet1_subjet0_pt = goodFatJets[goodFatJet2Index].subjet_pruned_pt()[0];
+      b_ak8jet1_subjet1_pt = goodFatJets[goodFatJet2Index].subjet_pruned_pt()[1];
+      b_ak8jet1_subjet0_csv = goodFatJets[goodFatJet2Index].subjet_pruned_csv()[0];
+      b_ak8jet1_subjet1_csv = goodFatJets[goodFatJet2Index].subjet_pruned_csv()[1];
+    }
   
     // Cut 6: require dijet system to pass mass threshold
     TLorentzVector dijet = goodFatJets[goodFatJet1Index].tlv() + goodFatJets[goodFatJet2Index].tlv();
